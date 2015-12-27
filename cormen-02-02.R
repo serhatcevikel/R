@@ -2,10 +2,10 @@ sersortmerge <- function(C) sersortmerge01(C,1,length(C)) # top level function w
 
 sersortmerge01 <- function(B,p,r) { # divide-and-conquer algorithm for vector A from p to r elements
     if (p < r) { # condition when more than 1 elements
-        q <- as.integer((p+r)/2) # mid point of the p-r segment. works the same as "floor" function, rounds down to integer
-        B[p:q] <- sersortmerge01(B,p,q) # recursive for first part. when the assignment is not made back to the original vector through indexing, it doesn't work!
-        B[(q+1):r] <- sersortmerge01(B,q+1,r) # recursive for second part
-        sermerge(B,p,q,r) # merge in sort two parts
+        q <- as.integer((p+r)/2) # devide: mid point of the p-r segment. works the same as "floor" function, rounds down to integer
+        B[p:q] <- sersortmerge01(B,p,q) # conquer1: recursive for first part. when the assignment is not made back to the original vector through indexing, it doesn't work!
+        B[(q+1):r] <- sersortmerge01(B,q+1,r) # conquer2: recursive for second part
+        sermerge(B,p,q,r) # combine: merge in sort two parts
     }  else {
        B[p:r]
     }
