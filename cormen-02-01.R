@@ -1,4 +1,4 @@
-sersortinsert01 <- function (x) { #x is a vector of numbers to be sorted
+sersortinsert <- function (x) { #x is a vector of numbers to be sorted
     for ( j in 2:length(x) ) { # loop for comparing element j
         key <- x[j] # comparing element 
         i <- j - 1 # index for element to be compared
