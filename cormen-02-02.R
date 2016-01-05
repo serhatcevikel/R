@@ -1,3 +1,5 @@
+# merge sort algorithm
+
 sersortmerge <- function(C) sersortmerge01(C,1,length(C)) # top level function with only one argument
 
 sersortmerge01 <- function(B,p,r) { # divide-and-conquer algorithm for vector A from p to r elements
@@ -7,7 +9,7 @@ sersortmerge01 <- function(B,p,r) { # divide-and-conquer algorithm for vector A 
         B[(q+1):r] <- sersortmerge01(B,q+1,r) # conquer2: recursive for second part
         sermerge(B,p,q,r) # combine: merge in sort two parts
     }  else {
-       B[p:r]
+       B[p:r] # return p-r segment
     }
 }
 
@@ -25,5 +27,5 @@ sermerge <- function(A,p,q,r) { # merge part of the algorithm. p where subset 1 
             j <- j + 1 # increment Right deck index
             }
         }
-A[p:r]
+A[p:r] # return p-r segment
 }
