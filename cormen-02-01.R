@@ -1,3 +1,5 @@
+# insertion sort, cormen page 17
+
 sersortinsert <- function (x) { #x is a vector of numbers to be sorted
     for ( j in 2:length(x) ) { # loop for comparing element j
         key <- x[j] # comparing element 
@@ -6,8 +8,7 @@ sersortinsert <- function (x) { #x is a vector of numbers to be sorted
             x[i + 1] <- x[i]; # shift the larger value right
             x[i] <- key; # shift the comparing element -key- left  
             i <- i - 1; # shift compare index left
-        }
-    }
-return(x)
-}
- 
+        } # close while loop
+    } # close for of j
+return(x) # return the sorted vector
+} # close function
