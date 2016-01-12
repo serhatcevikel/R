@@ -1,21 +1,27 @@
-# lesson 1 in https://codility.com/programmers/
+# Lesson 1 in https://codility.com/programmers/
 # BinaryGap
 # Find longest sequence of zeros in binary representation of an integer
+# url of the lesson is https://codility.com/programmers/task/binary_gap/
 #
-# https://codility.com/programmers/task/binary_gap/
-# solution written by Serhat Cevikel.
-#   
+# Solution written by Serhat Cevikel.
+# The url of this code is https://github.com/serhatcevikel/R/blob/master/codility-01.R   
 #
-# built in functions intToBits and strsplit are not used in order to exercise the lower level algorithms
+# Note: Built in functions intToBits and strsplit are deliberately not used in order to exercise the lower level algorithms
 #
-# manual:
-# use form_bin() to convert a vector of numbers into alternating runs of 1s and 0s with the times of repetition taken from the vector.
-#       odd indexed items of the input vector are the times 1's are repeated and vvi.
-#       in order to bypass the integer overflow, binary numbers are represented as a string
-# use bin2dec() to convert the binary number given by the form_bin()
-# use dec2bin() to convert the decimal number to binary as a string - can be utilized to validate bin2dec(). binary gap uses this function
-# use binarygap() to find the length of the maximum run of consecutive 0's in the binary representation of the decimal input
-#      note that the output of the binarygap() must be equal to the largest even indexed number in the input vector to form_bin() 
+# Manual:
+# Use form_bin() to convert a vector of numbers into alternating runs of 1s and 0s with the times of repetition taken from the vector.
+#       Odd indexed items of the input vector are the times 1's are repeated and vvi.
+#       In order to bypass the integer overflow, binary numbers are represented as a string
+#       For example: form_bin(c(1,3,2)) returns "100011"
+# Use bin2dec() to convert the binary number given by the form_bin()
+#       For example bin2dec("100011") returns 35
+# Use dec2bin() to convert the decimal number to binary as a string - can be utilized to validate bin2dec(). binary gap uses this function
+#       For example dec2bin(35) returns "100011"
+# Use binarygap() to find the length of the maximum run of consecutive 0's in the binary representation of the decimal input
+#       Note that the output of the binarygap() must be equal to the largest even indexed number in the input vector to form_bin() 
+#       For example binarygap(35) returns 3, the largest even indexed number in vector c(1,3,2)
+#
+# HAVE FUN! - Serhat Çevikel
 
 binarygap <- function(deci) { # function for funding the length of the longest sequence of 0's in the binary representation of a number
     bin_string <- dec2bin(deci) # convert the decimal to binary, as a string
