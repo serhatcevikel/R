@@ -20,6 +20,9 @@
 # Use binarygap() to find the length of the maximum run of consecutive 0's in the binary representation of the decimal input
 #       Note that the output of the binarygap() must be equal to the largest even indexed number in the input vector to form_bin() 
 #       For example binarygap(35) returns 3, the largest even indexed number in vector c(1,3,2)
+# 
+# 1000 times execution of binarygap(2147483647) takes 1.152 seconds
+#        try: system.time(replicate(1000, binarygap(2147483647)))
 #
 # HAVE FUN! - Serhat Çevikel
 
