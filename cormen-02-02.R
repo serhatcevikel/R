@@ -1,4 +1,7 @@
 # merge sort algorithm, cormen page 30-36
+# in recursive algorithms: condition to recurse, iteration, recursion (divide), combine (conquer), else atomic statement
+
+
 
 sersortmerge <- function(C) sersortmerge01(C,1,length(C)) # top level function with only one argument
 

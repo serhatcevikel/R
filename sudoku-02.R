@@ -3,7 +3,6 @@
 # if a digit exists only in a cell in a row, column or 3x3, leave it alone there
 # if a digit exists only in the cells of a single row (column) inside 3x3, delete those digits in the same row (column) outside the 3x3
 # this code is dedicated to my wife
-
 # first install "xlsx" package by install.packages("xlsx")
 
 library("xlsx") #include library xlsx to read data from xls file
@@ -14,6 +13,7 @@ assign("sudoku01", NULL) # define sudoku01 as global variable
 assign("sudoku_ar",NULL) # define sudoku_ar as global variable
 assign("sudoqu_sq",NULL) # define sudoku_sq as global variable
 assign("combinations",NULL)
+
 
 length_append <- function(a,b) { # function to append the non NA length of sudoku_ar
     len <- length(b[is.na(b) == FALSE]) # length of the array
@@ -48,15 +48,7 @@ sudoku <- function() {
     length_mat <<- length_append(length_mat, sudoku01) # length_mat updated with initial matrix
     output <<- rbind(length_array, length_mat) # combine the length_array and length_mat into a matrix
     assign("sudoku01",sudoku01) # assign sudoku01 as a global variable
-    #return(output)
-    #return(sudoku_ar)
-    #return(sudoku01)
-    return(combinations)
-    #sudoku_ar <<- sudoku_ar
-    #assign("sudoku_ar", sudoku_ar)
-    #return(length(sudoku_ar[is.na(sudoku_ar)==FALSE]))
-    # return(length_array)    
-
+    return(sudoku01)
 } #close function
 
 
@@ -67,6 +59,7 @@ form_array <- function() { # form a 3d array for 1:9
     return(sudoku_arc) # return the array
 } # close function
 
+
 combined_clear <- function(sudoku01c, sudoku_sqc, sudoku_arc) { # combine clear_single_first and clear_sudoku01 until no more gains
     count_sudoku_arc1 <- Inf # define the first count of non NA cells
     count_sudoku_arc2 <- length(sudoku_arc[is.na(sudoku_arc)==FALSE]) #number of non NA cells in sudoku_arc
@@ -76,6 +69,7 @@ combined_clear <- function(sudoku01c, sudoku_sqc, sudoku_arc) { # combine clear_
         sudoku_arc <- leave_the_orphan(sudoku01c, sudoku_sqc, sudoku_arc) # leave any digits that shows only on one cell in row, column or 3x3 is left alone
         sudoku_arc <- clear_outside_3x3(sudoku01c, sudoku_sqc, sudoku_arc) # leave any digits that shows only on one cell in row, column or 3x3 is left alone
         sudoku_arc <- multiple_clear_full_row(sudoku01c, sudoku_sqc, sudoku_arc) # clean rows for multiple common items
+        sudoku_arc <- multiple_clear_full_col(sudoku01c, sudoku_sqc, sudoku_arc) # clean columns for multiple common items
         sudoku01c <- clear_sudoku01(sudoku01c, sudoku_arc) # update sudoku01 
         sudoku_arc <- clear_single(sudoku01c, sudoku_sqc, sudoku_arc) # clear sudoku_arc off digits
         count_sudoku_arc2 <- length(sudoku_arc[is.na(sudoku_arc)==FALSE]) #number of non NA cells in sudoku_arc
@@ -212,13 +206,12 @@ clear_outside_3x3 <- function(sudoku01c, sudoku_sqc, sudoku_arc) { # clear the v
 } # close function
 
 
-multiple_clear_full_row <- function(sudoku01c, sudoku_sqc, sudoku_arc) { # find common item > 1 cells in rows/columns/3x3 and delete the common items from other cells 
-    for (cap in 2:2) { # for 1 max size of common items
-        for (row in 2:2) { # for 2 rows for control
+multiple_clear_full_row <- function(sudoku01c, sudoku_sqc, sudoku_arc) { # find common item > 1 cells in rows and delete the common items from other cells 
+    for (cap in 2:4) { # for 1 max size of common items
+        for (row in 1:9) { # for 2 rows for control
             indices_vector <- indices_vector_max_size(sudoku_arc, row, cap) # get the indices of cells in the row with sizes within 2 and cap
             if (length(indices_vector) >= cap) { # if 1 size of cells at least the cap 
-                combinations <<- t(combn(indices_vector, min(length(indices_vector),cap), FUN = NULL, simplify = TRUE)) # all combinations of cells/vectors of 2<size<cap
-                assign("combinations", combinations) # assign combinations to a global variable
+                combinations <- t(combn(indices_vector, min(length(indices_vector),cap), FUN = NULL, simplify = TRUE)) # all combinations of cells/vectors of 2<size<cap
                 n_comb  <- nrow(combinations) # number of total combinations
                 for (comb in 1:n_comb) { # for 3 combinations
                     common_vec <- numeric(9) # initiate a vector to control the common items
@@ -238,7 +231,7 @@ multiple_clear_full_row <- function(sudoku01c, sudoku_sqc, sudoku_arc) { # find 
     } # close for 1
     sudoku_ar <<- sudoku_arc # update the global variable
     assign("sudoku_ar", sudoku_ar) # save sudoku_ar as global variable 
-    return(sudoku_ar[,,2:3]) # return sudoku ar
+    return(sudoku_ar) # return sudoku ar
 } # close function    
 
 
@@ -256,19 +249,52 @@ indices_vector_max_size <- function(sudoku_arc,row,cap) { # get the column indic
     return(vector_indices) # return the vector
 } # close function
 
-#multiple_clear <- function(sudoku01c, sudoku_sqc, sudoku_arc, common_vec, vector_indices) { # if a value shows up only on one row or column in a square clear the values on the same row or column outside the square
-#    for ( cap in 2:4) { # for 1, maximum length of window for search
-#       for (row in 1:9) { # for 2, search each row 
-#            for (col in 1:(9-cap+1)) { # for 3, search each column
-#                vector_indices[col] <- col # put the index of the starting vector in to indices vector
-#                common_vec[1:9] <- NA # empty the common items vector of 9
-#                sudoku_vector <- sudoku_arc[row,col,] # get the vector for the cell
-#                sudoku_vector_full <- sudoku_vector[is.na(sudoku_vector)==FALSE] # get the full parts of the vecctor
-#                length_vector <- length(sudoku_vector_full) # number of items in the vector
-#                if (length_vector > 1 &&  length_vector <= cap) { # if 1, the length of the vector is more than 1 but within the cap
-#                    common_vec[sudoku_vector_full] <- sudoku_vector_full # put the items of the first vector into the common items vector
-#                    for (col2 in (col+1):9) { # for 4, seach 
-#} # close function
+
+multiple_clear_full_col <- function(sudoku01c, sudoku_sqc, sudoku_arc) { # find common item > 1 cells in columns and delete the common items from other cells 
+    for (cap in 2:3) { # for 1 max size of common items
+        for (col in 1:9) { # for 2 col for control
+            indices_vector <- indices_vector_max_size2(sudoku_arc, col, cap) # get the indices of cells in the col with sizes within 2 and cap
+            if (length(indices_vector) >= cap) { # if 1 size of cells at least the cap 
+                combinations <- t(combn(indices_vector, min(length(indices_vector),cap), FUN = NULL, simplify = TRUE)) # all combinations of cells/vectors of 2<size<cap
+                n_comb  <- nrow(combinations) # number of total combinations
+                for (comb in 1:n_comb) { # for 3 combinations
+                    common_vec <- numeric(9) # initiate a vector to control the common items
+                    common_vec[1:9] <- NA # make the common items vector of 9 NA's
+                    for (elements in 1:cap) { # for 4 each element
+                        vector_test <- sudoku_arc[combinations[comb,elements],col,] # get the vector for test
+                        vector_test_nonna <- vector_test[is.na(vector_test)==FALSE] # nonna elements of the vector test
+                        common_vec[vector_test_nonna] <- vector_test_nonna # update the common elements vector
+                    } # close for 4
+                    nonna_common_vec <- common_vec[is.na(common_vec)==FALSE] # nonna elements of common elements vector
+                    if(length(nonna_common_vec) <= cap) { # if 2 the number of common elements is <= cap
+                    sudoku_arc[-(combinations[comb,]), col, nonna_common_vec] <- NA # clean outside common item cells
+                    } # close if 2
+                } # close for 3
+            } # close if 1
+        } # close for 2
+    } # close for 1
+    sudoku_ar <<- sudoku_arc # update the global variable
+    assign("sudoku_ar", sudoku_ar) # save sudoku_ar as global variable 
+    return(sudoku_ar) # return sudoku ar
+} # close function    
+
+
+indices_vector_max_size2 <- function(sudoku_arc,col,cap) { # get the row indices of vectors with non NA elements up to a size
+    vector_indices <- numeric (9) # start an empty vector for the column indices of vectors
+    vector_indices[1:9] <- NA # make the vector_indices empty of length 9
+    sudoku_arc_col <- sudoku_arc[,col,] # sub matrix of the col
+    for (row in 1:9) { # 1 for each row
+        sudoku_arc_vector <- sudoku_arc_col[row,] # vector of the cell
+        nonna <- sudoku_arc_vector[is.na(sudoku_arc_vector)==FALSE] # nonna items of the vector
+        size_of_nonna <- length(nonna) # number of nonna items in the vector
+        if(size_of_nonna >=2 && size_of_nonna <= cap) vector_indices[row] <- row # update the indices vector with vector with sizes below cap
+    } # close for 1
+    vector_indices <- vector_indices[is.na(vector_indices)==FALSE] # nonna indices in the vector
+    return(vector_indices) # return the vector
+} # close function
+
+
+
 
 
 sudoku_squares <- function() { # define a sub function to make a matrix for numbering 3x3 squares
@@ -279,6 +305,7 @@ sudoku_squares <- function() { # define a sub function to make a matrix for numb
     } # close for
     return (sudoku_sq)
 } # close function
+
 
 get_sudoku_squares <- function(square) { # for a given square number, get the row and index indices as range
     mod3 <- (square - 1) %% 3 + 1 # modulo 3 for each square to number columns
