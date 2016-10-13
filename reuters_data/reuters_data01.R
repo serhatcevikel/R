@@ -30,5 +30,6 @@ reuters_data <- function(filename = "Serhat-Data.csv") { # get the data and resh
     varsmat <- data.frame(namdat, compname, varname, stringsAsFactors = F) # combine column names (V2 - V31), company names and variable names into one matrix
     datlong <- base::merge(x = varsmat, y = datlong, by.x = "namdat", by.y = "variable", all.x = T) # merge data and variable names
     datlong <- datlong[,c(4,2,3,5)] # reorder and filter columns
+    datlong[,4] <- as.numeric(datlong[,4]) # reorder and filter columns
     return(datlong)
 } # close function
