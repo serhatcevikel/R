@@ -32,6 +32,6 @@ reuters_data <- function(filename = "Serhat-Data.csv") { # get the data and resh
     datlong <- datlong[,c(4,2,3,5)] # reorder and filter columns
     datlong[,4] <- as.numeric(datlong[,4]) # change last column from character to numeric
     filename2 <- paste(str_extract(filename, "(?:(?!.csv).)*"), "2", ".csv", sep = "") # create new filename to be saved
-    write.csv(datlong, file = filename2, col.names = T) # save the new csv
+    write.csv(datlong, file = filename2, row.names = F) # save the new csv
     return(datlong)
 } # close function
