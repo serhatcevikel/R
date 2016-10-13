@@ -3,7 +3,7 @@
 #
 # Data should be saved as a csv file
 # "reshape2" for casting/melting data
-# stringr for string manipulation using regexp
+# "stringr" for string manipulation using regexp
 
 for (package in c("reshape2", "stringr")) { # check both packages
     if(!require(package, character.only = T, quietly = T)) { # if1 the package is not installed
@@ -16,7 +16,7 @@ for (package in c("reshape2", "stringr")) { # check both packages
 #library(stringr) # for string manipulation with regexp
 
 
-reuters_data <- function(filename = "Serhat-Data.csv") { # get the data and reshape it into 3 columns
+reuters_data <- function(filename = "Serhat-Data.csv") { # get the data and reshape it into 4 columns: date, company, variable, value
     dat <- read.csv(filename, header = F, stringsAsFactors = F) # read the file in csv, headers as first row so that special characters are not lost
     longnames <- dat[1,-1] # long names from the first row excluding the first one
     dat <- dat[-1,] # delete first row
@@ -30,6 +30,6 @@ reuters_data <- function(filename = "Serhat-Data.csv") { # get the data and resh
     varsmat <- data.frame(namdat, compname, varname, stringsAsFactors = F) # combine column names (V2 - V31), company names and variable names into one matrix
     datlong <- base::merge(x = varsmat, y = datlong, by.x = "namdat", by.y = "variable", all.x = T) # merge data and variable names
     datlong <- datlong[,c(4,2,3,5)] # reorder and filter columns
-    datlong[,4] <- as.numeric(datlong[,4]) # reorder and filter columns
+    datlong[,4] <- as.numeric(datlong[,4]) # change last column from character to numeric
     return(datlong)
 } # close function
