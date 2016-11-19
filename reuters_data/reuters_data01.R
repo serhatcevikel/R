@@ -35,3 +35,4 @@ reuters_data <- function(filename = "Serhat-Data.csv") { # get the data and resh
     write.csv(datlong, file = filename2, row.names = F) # save the new csv
     return(datlong)
 } # close function
+
