@@ -36,7 +36,7 @@ gamerps <- function(scoremax = 5) {
 
     winner <- which(scores == scoremax)
     #cat(sprintf("PC's score: %s, your score: %s\n", scores[1], scores[2])) # print the scores
-    cat(sprintf("%s %s the game\n", player[1, winner], player[2, winner])) # print the winner of round
+    cat(sprintf("%s %s the game\n", player[1, winner], player[2, winner])) # print the winner of the game
 
 }
 
