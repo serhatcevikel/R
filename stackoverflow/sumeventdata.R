@@ -24,7 +24,8 @@ rainruns <- function(datas = data1) {
     datas2 <- datas[!is.na(datas$inc),]
     summarydata1 <- aggregate(datas2$inc, by = list(datas2$event), FUN = function(x) c(length(x), sum(x), mean(x)))[[2]]
     summarydata2 <- aggregate(as.Date(datas2$Time), by = list(datas2$event), FUN = function(x) c(min(x), max(x)))[[2]]
-    summarydata <- data.frame(format(as.Date(summarydata2[,1], origin = "1970-01-01"), "%m/%d/%Y"), format(as.Date(summarydata2[,2], origin = "1970-01-01"), "%m/%d/%Y"), summarydata1)
+    summarydata <- data.frame(format(as.Date(summarydata2[,1], origin = "1970-01-01"), "%m/%d/%Y"),
+                              format(as.Date(summarydata2[,2], origin = "1970-01-01"), "%m/%d/%Y"), summarydata1)
     names(summarydata) <- c("Begin", "End", "Days", "Total", "Intensity")
     return(summarydata)
 }
