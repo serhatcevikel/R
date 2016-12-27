@@ -1,9 +1,17 @@
+#!/usr/bin/env Rscript
+
 # Rock paper scissors game against PC
 # For CMPE140
 
 # rock: 1 scissors: 2 paper: 3
 
 # gamerps is the main function
+
+# https://www.r-bloggers.com/passing-arguments-to-an-r-script-from-command-lines/
+
+args = commandArgs(trailingOnly=TRUE)
+
+
 
 gamerps <- function(scoremax = 5) {
     player <- cbind(c("PC", "wins"), c("You", "win")) # name of players. PC: 1, You: 2
@@ -39,6 +47,10 @@ gamerps <- function(scoremax = 5) {
     cat(sprintf("%s %s the game\n", player[1, winner], player[2, winner])) # print the winner of the game
 
 }
+
+
+gamerps(args[1])
+
 
 
 rps <- function(x, y) { # x and y chooses among 1:3, returns the index of winner or "0" if tie
