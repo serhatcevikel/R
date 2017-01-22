@@ -60,8 +60,8 @@ crossingsub <- function(A, low, mid, high) { # the max subarray which crosses th
         } # close if 2
     } # close for 2 of j
 
-return(c(max_left, max_right, (left_sum + right_sum))) # return the indices of the max left and right values and the total of both left and right sums
-# multi-argument returns are not allowed, so return values are concatenated into a vector
+    return(c(max_left, max_right, (left_sum + right_sum))) # return the indices of the max left and right values and the total of both left and right sums
+    # multi-argument returns are not allowed, so return values are concatenated into a vector
 
 } # close function
 
