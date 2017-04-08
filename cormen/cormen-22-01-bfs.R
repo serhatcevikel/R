@@ -1,0 +1,114 @@
+# breadth-first-search (bfs)
+# cormen 595
+# 1 for each vertex u 2 G:V - {s}
+# 2   u:color D WHITE
+# 3   u:d = 1
+# 4   u:pi = NIL
+# 5 s:color 0 GRAY
+# 6 s:d = 0
+# 7 s:pi = NIL
+# 8 Q = 0;
+# 9 ENQUEUE(Q,s)
+# 10 while Q != 0
+# 11  u = DEQUEUE.Q/
+# 12  for each v in G:Adj[u]
+# 13      if v:color == WHITE
+# 14      v:color = GRAY
+# 15      v:d = u:d + 1
+# 16      v:pi = u
+# 17      ENQUEUE(Q,v)
+# 18  u:color = BLACK
+
+library(igraph)
+
+links <- as.data.frame(cbind(c(1,1,2,3,4,4,5), c(2,3,1,4,5,1,3)))
+nodes <- as.data.frame(cbind(c(1,2,3,4,5), c(10,10,10,20,20)))
+
+net <- graph_from_data_frame(d = links, vertices = nodes, directed = F)
+net2 <- simplify(net, remove.multiple = T, remove.loops = F)
+plot(net2)
+
+admat <- as.matrix(read.csv("adjacency.matrix.csv", header = F))
+admat <- (admat + t(admat) > 0) + 0
+net3 <- graph_from_adjacency_matrix(admat, mode = "undirected")
+net4 <- simplify(net3, remove.multiple = T, remove.loops = F)
+plot(net4)
+
+adlist1 <- apply(admat, 1, function(x) which(x == 1))
+
+vermat1 <- as.data.frame(cbind(1:nrow(admat), NA, NA, NA))
+colnames(vermat1) <- c("vertex", "color", "distance", "predecessor")
+
+bfss <- function(root = 1, adlist = adlist1, vermat = vermat1) { # root is root node no, adlist is adjacency list, vermat is the attribute matrix for vertices
+    no.vertex <- nrow(vermat) # number of vertices
+
+    # give the attributes for non-root vertices
+    for (vert in (1:no.vertex)[-root]) { # for1 one across non root vertices
+        vermat[vert, "color"] <- "white"
+        vermat[vert, "distance"] <- Inf
+        vermat[vert, "predecessor"] <- NA
+    } # close for1
+
+    ## attributes for root
+    vermat[root, "color"] <- "gray"
+    vermat[root, "distance"] <- 0
+    vermat[root, "predecessor"] <- NA
+
+    Qu <<- NULL # initiate queue 
+    
+    enqueue(root) # add root to queue
+
+    while (length(Qu) > 0) { # while1 queue Q is not empty
+        u <- dequeue() # dequeue Q and return head
+
+        for (v in adlist[[u]]) { # for2 each adjacent vertice in u entry of list
+
+            if (vermat[v, "color"] == "white") { # if1 vertice was not examined yet
+                vermat[v, "color"] <- "gray" # make it gray - in process
+                vermat[v, "distance"] <- vermat[u, "distance"] + 1 # increment its distance to root
+                vermat[v, "predecessor"] <- u # record its predecessor
+                enqueue(v) # enqueue v so that its adjacent nodes will be examined
+            } # close if1
+
+        } # close for2
+
+        vermat[u, "color"] <- "black" # u is finished for examination, all adjacent vertices has been covered
+
+    } # close while1
+    par(mfrow=c(1,2)) # split screen for 2 plots
+
+    plot(net4, vertex.label = paste(vermat[,1], vermat[,3], sep = "/")) # plot all edges with distances to root at vertices
+
+    links <- vermat[-root,c(1,4)] # prepare plot for tree (vertices and predecessors)
+    nodes <- vermat[,c(1,3)] # vertices and attributes
+
+    net <- graph_from_data_frame(d = links, vertices = nodes, directed = F) # create new network object as a tree
+    net2 <- simplify(net, remove.multiple = T, remove.loops = F) # simplify the object
+    plot(net2, vertex.label = paste(nodes[,1], nodes[,2], sep = "/"), add = F) # plot tree with distances to root
+
+    vermat2 <<- vermat 
+
+    return(vermat) # return the distances and predecessors df
+
+} # close function
+
+
+# cormen pg 601
+printpath <- function(vermat = vermat2, path1 = NULL, v = 10) { # using vermat vertice matrix, print the path from v to s
+    s <- which(vermat[,3] == 0) # find the root
+    predecessor <- vermat[v,4] # predecessor vertice of v
+    if (v == s) { # if current v is root s
+        return(c(path1, s)) # append it to incoming path and return
+    } else if (is.na(vermat[v,4])) { # else, if predecessor is NIL (other than the root)
+            return("no.path") # print no path
+    } else  printpath(vermat, c(path1, v), predecessor) # else append current v to existing path and recurse
+} # close function
+
+
+enqueue <- function(vert) Qu <<- c(Qu, vert) # add vert to the end of queue Q
+
+dequeue <- function() { # delete the first item of queue Q and return it
+    headq <- Qu[1]
+    Qu <<- Qu[-1]
+    return(headq)
+}
