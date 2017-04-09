@@ -1,49 +1,31 @@
 # breadth-first-search (bfs)
 # cormen 595
-# 1 for each vertex u 2 G:V - {s}
-# 2   u:color D WHITE
-# 3   u:d = 1
-# 4   u:pi = NIL
-# 5 s:color 0 GRAY
-# 6 s:d = 0
-# 7 s:pi = NIL
-# 8 Q = 0;
-# 9 ENQUEUE(Q,s)
-# 10 while Q != 0
-# 11  u = DEQUEUE.Q/
-# 12  for each v in G:Adj[u]
-# 13      if v:color == WHITE
-# 14      v:color = GRAY
-# 15      v:d = u:d + 1
-# 16      v:pi = u
-# 17      ENQUEUE(Q,v)
-# 18  u:color = BLACK
 
 library(igraph)
 
-links <- as.data.frame(cbind(c(1,1,2,3,4,4,5), c(2,3,1,4,5,1,3)))
-nodes <- as.data.frame(cbind(c(1,2,3,4,5), c(10,10,10,20,20)))
+links <- as.data.frame(cbind(c(1,1,2,3,4,4,5), c(2,3,1,4,5,1,3))) # edges as a data frame
+nodes <- as.data.frame(cbind(c(1,2,3,4,5), c(10,10,10,20,20))) # vertices as a data frame
 
-net <- graph_from_data_frame(d = links, vertices = nodes, directed = F)
-net2 <- simplify(net, remove.multiple = T, remove.loops = F)
-plot(net2)
+net <- graph_from_data_frame(d = links, vertices = nodes, directed = F) # network object
+net2 <- simplify(net, remove.multiple = T, remove.loops = F) # simplify the network object
+plot(net2) # plot the graph
 
-admat <- as.matrix(read.csv("adjacency.matrix.csv", header = F))
-admat <- (admat + t(admat) > 0) + 0
-net3 <- graph_from_adjacency_matrix(admat, mode = "undirected")
-net4 <- simplify(net3, remove.multiple = T, remove.loops = F)
-plot(net4)
+admat <- as.matrix(read.csv("adjacency.matrix.csv", header = F)) # read adjacency matrix from csv
+admat <- (admat + t(admat) > 0) + 0 # make it symmetric
+net3 <- graph_from_adjacency_matrix(admat, mode = "undirected") # read into network object
+net4 <- simplify(net3, remove.multiple = T, remove.loops = F) # simplify the network object
+plot(net4) # plot the graph
 
-adlist1 <- apply(admat, 1, function(x) which(x == 1))
+adlist1 <- apply(admat, 1, function(x) which(x == 1)) # extract adjacency list from adjacency matrix
 
-vermat1 <- as.data.frame(cbind(1:nrow(admat), NA, NA, NA))
-colnames(vermat1) <- c("vertex", "color", "distance", "predecessor")
+vermat1 <- as.data.frame(cbind(1:nrow(admat), NA, NA, NA)) # create a data frame to record attributes
+colnames(vermat1) <- c("vertex", "color", "distance", "predecessor") # give column names for attribute columns
 
 bfss <- function(root = 1, adlist = adlist1, vermat = vermat1) { # root is root node no, adlist is adjacency list, vermat is the attribute matrix for vertices
     no.vertex <- nrow(vermat) # number of vertices
 
     # give the attributes for non-root vertices
-    for (vert in (1:no.vertex)[-root]) { # for1 one across non root vertices
+    for (vert in (1:no.vertex)[-root]) { # for1 across non root vertices
         vermat[vert, "color"] <- "white"
         vermat[vert, "distance"] <- Inf
         vermat[vert, "predecessor"] <- NA

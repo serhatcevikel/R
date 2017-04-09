@@ -1,0 +1,7 @@
+Node,Left,Right,Parent,Key
+1,2,3,NA,6
+2,4,5,1,5
+3,NA,6,1,7
+4,NA,NA,2,2
+5,NA,NA,2,5
+6,NA,NA,3,8
