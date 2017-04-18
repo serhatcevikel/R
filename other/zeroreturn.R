@@ -9,7 +9,11 @@ countifzero <- function(path = ".") { # count the zero returns in each month for
     for (filn in filelist) { # for1, across csv files
         data1 <- read.csv(filen) # read data
         output <- gsub(".csv", "-zero.csv", filn) # create output object name 
-        averages <- aggregate(data1[,-(1:2)], by = list(data1[,1], data1[,2]), FUN = function(x) length(x[x == 0]) / length(x)) # get averages
+
+        averages <- aggregate(data1[,-(1:2)],
+                              by = list(data1[,1], data1[,2]),
+                              FUN = function(x) length(x[x == 0]) / length(x)) # get averages
+
         write.csv(averages, file = sprintf("./output/%s", output)) # write to file
     } # close for1
 
