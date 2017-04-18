@@ -10,12 +10,15 @@ bst3 <- read.csv("binary.search.tree.03.csv")
 plot.tree <- function(bst = bst1) { # plot bst
     root <- which(is.na(bst$Parent)) # find the root (parent is NA)
     links1 <- apply(bst, 1, bstlinks) # create children links as list
-    links2 <- do.call(rbind, links1) # convert list to matrix
+    if (class(links1) == "list") {
+        links2 <- do.call(rbind, links1) # convert list to matrix
+    } else links2 <- links1
     nodes <- bst[,c(1,5)] # get node no's and keys
     net <- graph_from_data_frame(d = links2, vertices = nodes, directed = F) # network object
+    sides <- sapply(nodes[,1], bst.side, bst)
     plot(net,
          layout = layout.reingold.tilford(net, root=root),
-         vertex.label = paste(nodes[,1], nodes[,2], sep = "/")
+         vertex.label = paste(nodes[,1], nodes[,2], sides, sep = "/")
          ) # plot as tree with root
     return(links2)
 } # close funtion
@@ -28,6 +31,13 @@ bstlinks <- function(bst) { # convert children nodes to links
         return(bstmat)
     } # close if
 } # close function
+
+bst.side <- function(node, bst = bst3) { # get whether a node is a Left or Right child of its parent
+    if (node %in% bst$Left) "L" else {
+        if (node %in% bst$Right) "R" else ""
+    }
+}
+
 
 
 # pg 288
