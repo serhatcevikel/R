@@ -47,7 +47,15 @@ covna <- function(x, lagg = 1) { # lagged covariances
     x1 <- x[-(1:lagg)] # trim the beginning
     x2 <- x[-(length(x) - (1:lagg) + 1)] # trim the end
     covx <- cov(x1, x2) # get lagged covariances
-    return(covx)  
+    if (!is.na(covx)) {
+        if (covx < 0) {
+            rollx <- 2 * ((-covx)^0.5)
+        } else rollx <- 0
+    } else rollx <- NA    
+        
+    
+     
+    return(rollx)  
 }
 
 
