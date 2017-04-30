@@ -44,19 +44,19 @@ covbymonth <- function(path = ".", sepp = ";", lagg = 1) { # count the zero retu
 
 covna <- function(x, lagg = 1) { # lagged covariances
     x <- x[!is.na(x)] # remove NAs
--
-    if(!is.numeric(x)) NA else {
+
+    if(!is.numeric(x)) NA else { # if1 the column is not numeric (all NA column, return NA else
         x1 <- x[-(1:lagg)] # trim the beginning
         x2 <- x[-(length(x) - (1:lagg) + 1)] # trim the end
         covx <- cov(x1, x2) # get lagged covariances
-        if (!is.na(covx)) {
-            if (covx < 0) {
-                rollx <- 2 * ((-covx)^0.5)
-            } else rollx <- 0
-        } else rollx <- NA    
+        if (!is.na(covx)) { # if2 covariance is not NA
+            if (covx < 0) { # if3 covariance is negative
+                rollx <- 2 * ((-covx)^0.5) # apply the roll measure
+            } else rollx <- 0 # else3 0
+        } else rollx <- NA # else2 NA
          
         return(rollx)  
-    }
+    } # close if
 }
 
 
