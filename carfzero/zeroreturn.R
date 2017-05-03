@@ -1,4 +1,7 @@
 # get share of zero return counts in each month
+#library("xlsx") #include library xlsx to read data from xls file
+library("openxlsx") #include library xlsx to read data from xls file
+
 
 countifzero <- function(path = ".", sepp = ";") { # count the zero returns in each month for each column
     
@@ -42,6 +45,27 @@ covbymonth <- function(path = ".", sepp = ";", lagg = 1) { # count the zero retu
 
 }
 
+covbymonth.xls <- function(path = ".", sepp = ";", lagg = 1) { # count the zero returns in each month for each column
+    
+    setwd(path) # change working directory
+    dir.create(file.path(".", "output.cov.xls"), showWarnings = F) # create output directory
+    filelist <- list.files("./input.xls") # get file list under current directory
+
+    for (filn in filelist) { # for1, across csv files
+        #data1 <- read.csv(sprintf("./input/%s", filn)) # read data
+        data1 <- openxlsx::read.xlsx(sprintf("./input.xls/%s", filn)) # read sudoku data from file into a matrix names sudoku01
+        #data1 <- read.table(sprintf("./input/%s", filn), header = T, sep = sepp) # read data
+        output <- gsub(".xlsx", "-cov.csv", filn) # create output object name 
+
+        averages <- aggregate(data1[,-(1:2)],
+                              by = list(data1[,1], data1[,2]),
+                              FUN = covna,
+                              lagg ) # get lagged covariances
+
+        write.csv(averages, file = sprintf("./output.cov.xls/%s", output)) # write to file
+    } # close for1
+
+}
 covna <- function(x, lagg = 1) { # lagged covariances
     x <- x[!is.na(x)] # remove NAs
 
