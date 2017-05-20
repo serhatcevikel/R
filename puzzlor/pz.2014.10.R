@@ -14,7 +14,7 @@
 ## Using dp, memoized into a matrix, rows of which are indexed through a 4D array (4 players)
 ## In each recursion, all possible attack permutations are followed with equal probability
 ## Probabilities are joined into recursion depth through a parameter and multiplication
-## Recursion stops when only player remains with non-zero health
+## Recursion stops when only one player remains with non-zero health
 
 
 library(gtools) ## for non-repeated permutations
