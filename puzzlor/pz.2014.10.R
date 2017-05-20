@@ -26,10 +26,15 @@ puzzlor.fighters <- function() { # get the winning probabilities of each player
     health <- c(10, 12, 16, 18) # initial health points of players a:d
     attack <- c(4, 3, 2, 1) # attack points of players a:d
 
-    # global objects for memoization
-    result.mat <<- matrix(ncol = 4, nrow = prod(health + 1)) # superassigned matrix to hold results
-    result.ar <<- array(dim = health + 1, dimnames = NULL) # superassigned empty array of 4D for 4 players. dim length initial health + 1, to account for 0's. recycled from p018, p067
-    row.ind <<- 1 # superassigned row index counter for the result.mat kept at result.ar
+    ## global objects for memoization
+
+    # superassigned matrix to hold probabilities for each health configuration (health values of all players)
+    result.mat <<- matrix(ncol = 4, nrow = prod(health + 1))
+    # superassigned empty array of 4D for 4 players to hold the row index for the health configuration. dim length initial health + 1, to account for 0's. recycled from p018, p067
+    result.ar <<- array(dim = health + 1, dimnames = NULL)
+    # superassigned row index counter for the result.mat kept at result.ar
+    row.ind <<- 1
+
 
     at.combs <- gtools::permutations(4, 2, 1:4) # permutations of players. first column attackers, second column attacked. self attack not allowed (no repetitions). recycled from p171
     results <- t(apply(at.combs, 1, fight.rec, health, attack, 1/12)) # get matrix of results through ply
