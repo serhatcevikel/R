@@ -26,20 +26,21 @@ puzzlor.fighters <- function() { # get the winning probabilities of each player
     health <- c(10, 12, 16, 18) # initial health points of players a:d
     attack <- c(4, 3, 2, 1) # attack points of players a:d
 
-    result.mat <<- matrix(ncol = 4, nrow = prod(health + 1)) # matrix to hold results
-    result.ar <<- array(dim = health + 1, dimnames = NULL) # create an array of 0's with two layers: first layer nodes, second layer max sum to the top. recycled from p018, p067
-    row.ind <<- 1 # row index counter for the result.mat kept at result.ar
+    # global objects for memoization
+    result.mat <<- matrix(ncol = 4, nrow = prod(health + 1)) # superassigned matrix to hold results
+    result.ar <<- array(dim = health + 1, dimnames = NULL) # superassigned empty array of 4D for 4 players. dim length initial health + 1, to account for 0's. recycled from p018, p067
+    row.ind <<- 1 # superassigned row index counter for the result.mat kept at result.ar
 
     at.combs <- gtools::permutations(4, 2, 1:4) # permutations of players. first column attackers, second column attacked. self attack not allowed (no repetitions). recycled from p171
-    results <- t(apply(at.combs, 1, fight.rec, health, attack, 1/12)) # matrix of results
+    results <- t(apply(at.combs, 1, fight.rec, health, attack, 1/12)) # get matrix of results through ply
     result <- colSums(results) # sum all probabilities of each player
-    names(result) <- c("Allan", "Barry", "Charles", "Dan")
+    names(result) <- c("Allan", "Barry", "Charles", "Dan") # update player names
     return(result)
 
 }
     
 
-fight.rec <- function(at, health, attack, prob) { # recursive function to recalculate the win probabilities after an attack, incorporating cumulative joint probabilities
+fight.rec <- function(at, health, attack, prob) { # recursive function to recalculate the win probabilities after an attack, incorporating bottom-up cumulative joint probabilities
 
     # at: vector of attacker and attacked no's
     # at1: attacker no
@@ -71,11 +72,11 @@ fight.rec <- function(at, health, attack, prob) { # recursive function to recalc
         } else { # close if2, else2
 
             at.combs <- gtools::permutations(length(players), 2, players) # permutations of indices of attackers and attackeds. self attack not allowed (no repetitions in permutations) recycled from p171
-            probs <- nrow(at.combs) # total count of combinations
-            prob.new <- 1 / probs # probability of each combination
-            results <- t(apply(at.combs, 1, fight.rec, health, attack, prob.new)) # matrix of results recursing the function
+            probs <- nrow(at.combs) # total count of attack permutations
+            prob.new <- 1 / probs # probability of each attack permutation
+            results <- t(apply(at.combs, 1, fight.rec, health, attack, prob.new)) # collect matrix of results recursing the function
             result <- colSums(results) # sum the probabilities for each player
-            "["(result.ar, t(as.matrix(health + 1))) <<- row.ind # memoize the row index for result matrix
+            "["(result.ar, t(as.matrix(health + 1))) <<- row.ind # memoize the row index for result matrix into the 4d array
             result.mat[row.ind,] <<- result # memoize the results into the matrix
             row.ind <<- row.ind + 1 # increment the row index for the results matrix
             result <- prob * result # multiply with the joint probability
