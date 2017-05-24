@@ -20,6 +20,7 @@
 library(gtools) ## for non-repeated permutations
 
 
+## dp version with two objects for memoization: a 4D array for holding the row index, and a matrix
 puzzlor.fighters <- function() { # get the winning probabilities of each player
     # win means only one player remains with non-zero health
 
@@ -94,6 +95,7 @@ fight.rec <- function(at, health, attack, prob) { # recursive function to recalc
 }
 
 
+## dp version with a 5D array for memoization. best performance
 puzzlor.fighters.5D <- function() { # get the winning probabilities of each player
     # win means only one player remains with non-zero health
 
@@ -132,7 +134,7 @@ fight.rec.5D <- function(at, health, attack, prob) { # recursive function to rec
     at2 <- at[2] # attacked no
 
     health[at2] <- max(health[at2] - attack[at1], 0) # update the health of at2 after attack
-    mat.index <- cbind(matrix(rep(health + 1, 4), nrow = 4, byrow = T), 1:4)
+    mat.index <- cbind(matrix(rep(health + 1, 4), nrow = 4, byrow = T), 1:4) # create a matrix for indexing the 5D array
 
     mat.row <- "["(result.ar, mat.index) # get the memoized health configuration
 
