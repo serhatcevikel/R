@@ -2,7 +2,7 @@
 
 library(gpuR)
 
-ORDER <- 2048
+ORDER <- 3
 
 A = matrix(rnorm(ORDER^2), nrow=ORDER)
 B = matrix(rnorm(ORDER^2), nrow=ORDER)
