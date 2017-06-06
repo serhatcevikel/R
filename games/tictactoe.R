@@ -2,7 +2,7 @@
 # machine selects the best move considering the best move of the opponent in subsequent moves
 
 
-ttt <- function(parallel = F, starts = 1) # 1 is real, 2 is machine
+ttt <- function(parallel = T, starts = 1) # 1 is real, 2 is machine
 {
     move <- 1 # initiate move
 
