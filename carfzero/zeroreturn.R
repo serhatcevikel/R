@@ -16,7 +16,7 @@ countifzero <- function(path = ".", sepp = ";") { # count the zero returns in ea
 
         averages <- aggregate(data1[,-(1:2)],
                               by = list(data1[,1], data1[,2]),
-                              FUN = function(x) length(x[x == 0]) / length(x)) # get averages
+                              FUN = function(x) length(x[x == 0 & !is.na(x)]) / length(x[!is.na(x)])) # get averages
 
         write.csv(averages, file = sprintf("./output/%s", output)) # write to file
     } # close for1
