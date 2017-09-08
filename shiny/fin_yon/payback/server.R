@@ -11,8 +11,8 @@ shinyServer(function(input, output) {
   #  2) Its output type is a plot
     payback.period <- reactive(apply(input$tbl, 1, payback))
 
-    output$textt1 <- renderText(paste("Proje1 geri ödeme süresi: ", round(bugunku.deger(), 2), " yıldır" sep = ""))
-    output$textt2 <- renderText(paste("Proje2 geri ödeme süresi: ", round(bugunku.deger(), 2), " yıldır" sep = ""))
+    output$textt1 <- renderText(paste("Proje1 geri ödeme süresi: ", round(payback.period()[1], 2), " yıldır" sep = ""))
+    output$textt2 <- renderText(paste("Proje2 geri ödeme süresi: ", round(payback.period()[2], 2), " yıldır" sep = ""))
 
   output$pointplot <- renderPlot({
     plot(x = input$f,
@@ -40,19 +40,3 @@ payback <- function(cfvec)
 }
 
 
-
-
-bono.fiyat <- function(k, n, f, t) {
-    kup <- k / n
-    faiz <- (1 + (f/100))^(1/n) - 1
-    don <- n * t
-
-    kuplar <- (kup / faiz) * (1 - (1 / ((1+faiz)^don)))
-
-    anapara <- 100 / ((1 + faiz)^don)
-
-    fiyat <- kuplar + anapara
-
-    return(fiyat)
-
-}

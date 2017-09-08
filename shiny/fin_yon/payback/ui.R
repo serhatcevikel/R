@@ -1,4 +1,5 @@
 library(shiny)
+library(shinyIncubator)
 
 projeler <- rbind(Proje1 = c(-1000, 120, 380, -50, 350, 520),
                   Proje2 = c(-1200, 440, 330, 180, 20, 400)
@@ -19,7 +20,8 @@ shinyUI(pageWithSidebar(
   # Show a plot of the generated distribution
   mainPanel(
     plotOutput("pointplot", height=400, width = 400),
-    span(textOutput("textt"), style="color: red; font-size: 30px; font-style: bold")
+    span(textOutput("textt1"), style="color: red; font-size: 30px; font-style: bold"),
+    span(textOutput("textt2"), style="color: red; font-size: 30px; font-style: bold")
     )
   
 )
