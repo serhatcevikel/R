@@ -62,3 +62,31 @@ collect_primes <- function(y) # collect the primes upto y,sieve of Eratosthenes.
     } # close else 1
 
 } # close function
+
+
+# this one tracks the primes and multiples not by deleting a vector but toggling boolean values
+# the multiples are extracted by a sequence, not modulo
+collect_primes2 <- function(limitt) # this works with a boolean vector
+{
+    bool_vec <- rep(T, limitt)
+    bool_vec[1] <- F
+    number_vec <- c(2, 1 + 2 * (1:ceiling(sqrt(limitt) / 2)))
+
+    for (num in number_vec)
+    {
+ 
+        if (bool_vec[num])
+        {
+            indices <- num * (2:floor(limitt / num))
+            bool_vec[indices] <- F
+        }
+ 
+    }
+
+    primes <- which(bool_vec)
+
+    return(primes)
+
+}
+
+    
