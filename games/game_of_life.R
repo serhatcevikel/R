@@ -8,25 +8,42 @@ editsavepattern <- function(sizee, namee)
 }
 
 
-iterate_conway <- function(dens = 0.3, dimm = 30, waitt = 0.01, maxit = 1e6, torus = T, pattern = NULL)
+iterate_conway <- function(dens = 0.5, dimm = 100, waitt = 0, maxit = 1e6, torus = T, pattern = NULL, colr = NULL, cont = NULL)
 {
-    if(!is.null(pattern))
+    colr <- if(is.null(colr)) "blue" else colr
+
+    if(!is.null(cont))
     {
-        load(sprintf("%s.RData", pattern))
-        dims <- dim(starter)
-        dimm <- max(dimm, max(dims))
-        mm <- matrix(0, nrow = dimm, ncol = dimm)
-        topleftr <- floor((dimm - dims[1]) / 2)
-        topleftc <- floor((dimm - dims[2]) / 2)
-        mm[topleftr + (1:dims[1]), topleftc + (1:dims[2])] <- starter
+        load(sprintf("%s.RData", cont))
+        mm <- mmlist[[1]]
+        torus <- mmlist[[2]]
     }
     else
     {
-        sizee <- dimm^2
-        samp <- sample(c(rep(1, sizee * dens), rep(0, sizee * (1 - dens))))
-        mm <- matrix(samp, nrow = dimm)
-        mm <- edit(mm)
+        if(!is.null(pattern))
+        {
+            load(sprintf("%s.RData", pattern))
+            dims <- dim(starter)
+            dimm <- max(dimm, max(dims))
+            mm <- matrix(0, nrow = dimm, ncol = dimm)
+            topleftr <- floor((dimm - dims[1]) / 2)
+            topleftc <- floor((dimm - dims[2]) / 2)
+            mm[topleftr + (1:dims[1]), topleftc + (1:dims[2])] <- starter
+        }
+        else
+        {
+            sizee <- dimm^2
+            samp <- sample(c(rep(1, sizee * dens), rep(0, sizee * (1 - dens))))
+            mm <- matrix(samp, nrow = dimm)
+            mm <- edit(mm)
+        }
+
+        mmlist <- list(mm = mm, torus = torus)
+        filename <- format(Sys.time(), "%s")
+        save(mmlist, file = sprintf("%s.RData", filename))
+
     }
+
 
     neigh_count <- function(x,y)
     {
@@ -51,7 +68,9 @@ iterate_conway <- function(dens = 0.3, dimm = 30, waitt = 0.01, maxit = 1e6, tor
 
     plot(plotobj1,
          plotobj2,
-         pch = ifelse(mm, 15, 0),
+         #pch = ifelse(mm, 15, 0),
+         pch = 15,
+         col = ifelse(mm, colr, "white"),
          cex = 2,
          asp = 1,
          xpd = NA,
@@ -66,7 +85,9 @@ iterate_conway <- function(dens = 0.3, dimm = 30, waitt = 0.01, maxit = 1e6, tor
         
         plot(plotobj1,
              plotobj2,
-             pch = ifelse(mm, 15, 0),
+             #pch = ifelse(mm, 15, 0),
+             pch = 15,
+             col = ifelse(mm,  colr, "white"),
              cex = 2,
              asp = 1,
              xpd = NA,
